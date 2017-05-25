@@ -2,29 +2,37 @@
 #
 # Description:
 #  Accesses raw USGS water usage data and creates Numpy/Pandas table for analysis/visualization.
+#  Provides the template for the following analyses:
+#  - Merge data for 2000, 2005, and 2010 into a single data frame
+#  - Aggregate county level data to the state level
+#  - Generate state/county choropleth maps of different attributes
 # 
 # Summer 2017
 # John.Fay@duke.edu
 
 #Import modules
-import sys, os, urllib
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
-#Get paths
-rootFolder = os.path.dirname(sys.argv[0])
+#Create a master data frame from the yearly file/url
+theBaseURL = 'http://water.usgs.gov/watuse/data/{0}/usco{0}.txt' #Use format to replace {0} with year
+#Initialize list of year data frames
+dfs = []
+#Loop through years
+for year in (2000,2005,2010):
+    print "Creating data frame for year {}...".format(year)
+    #Create data frames from on-line tables
+    df = pd.read_table(theBaseURL.format(year))
+    #Insert year column if not there already
+    if not "YEAR" in df.columns:
+        df.insert(4,"YEAR",year)
+    #Append to list of dataframes
+    dfs.append(df)
+#Merge into a single table
+print "Merging tables..."
+df = pd.concat(dfs)
 
-#Retrieve annual water usage data, if not present already
-for year in ['2005','2010']:
-    theURL = 'http://water.usgs.gov/watuse/data/{0}/usco{0}.txt'.format(year)
-    theFN = theURL.split("/")[-1]
-    theFullFN = os.path.join(rootFolder,theFN)
-    if not os.path.exists(theFullFN):
-        print("Downloading {}".format(theURL))
-        theResponse = urllib.urlretrieve(theURL,theFullFN)
-        print("...Done!")
-    else:
-        print("{} already rerieved".format(theURL))
-
-#Create data frames from the documents
-theData = pd.read_csv(theFullFN,'\t')
+#Summarize data by state
+grpState =  df[['STATE','TP-TotPop','PS-WFrTo']].groupby(df['STATE'])
+dfState = grpState.sum()
