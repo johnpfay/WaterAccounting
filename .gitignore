@@ -1,0 +1,3 @@
+#ignore .RProj.user folder and R history file
+RWorkspace/.Rproj.user/
+RWorkspace/.Rhistory
