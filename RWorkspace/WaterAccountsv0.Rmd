@@ -15,14 +15,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r InstallPackages, message=FALSE, warning=FALSE}
 # these are packages you will need, but probably already have.
 # Don't bother installing if you already have them
-install.packages(c("ggplot2", "devtools", "dplyr", "stringr"))
+##install.packages(c("ggplot2", "devtools", "dplyr", "stringr"))
 
 # some standard map packages.
-install.packages(c("maps", "mapdata"))
+##install.packages(c("maps", "mapdata"))
 
 # the github version of ggmap, which recently pulled in a small fix I had
 # for a bug 
-devtools::install_github("dkahle/ggmap")
+##devtools::install_github("dkahle/ggmap")
 
 ```
 
@@ -32,52 +32,58 @@ devtools::install_github("dkahle/ggmap")
 library(dplyr)
 library(magrittr)
 library(ggplot2)
-library(ggmap)
+#library(ggmap)
 library(maps)
 library(mapdata)
 ```
 
 ## Get USGS water use data
 ```{r Water Data}
-library('data.table')
 theURL <- 'http://water.usgs.gov/watuse/data/2010/usco2010.txt'
-df = fread(theURL, sep='\t')
-df = as.data.frame(df)
+dataTbl = read.table(theURL, sep='\t',header=TRUE) %>%
+  select(-X)
 ```
 
-##Get FIPS table
+##Get FIPS table & change state name to lower case (for joining)
 ```{r}
 #Retrieve fips table and convert state name to lowercase
 fipsTbl <- read.csv("https://raw.githubusercontent.com/ljwolf/cenpy/master/cenpy/stfipstable.csv") %>%
   mutate(
     stateName = tolower(`State.Name`)) %>%
   select(one_of(c("FIPS.Code","stateName")))
-
-#Data table
-dataTbl = tbl_df(df[0:10])
-
-
-#Join state names
-useTbl = left_join(dataTbl,fipsTbl,by = c("STATEFIPS" = "FIPS.Code"))
 ```
 
-##Summarize on state
+##Join fips state name to USGS use table
+```{r Join statename to USGS use table}
+#Join state names
+dataTbl = left_join(dataTbl,fipsTbl,by = c("STATEFIPS" = "FIPS.Code"))
+```
+
+##Drop non data fields
 ```{r}
-stateTbl = group_by(useTbl, stateName) %>%
-  summarize(totPop = sum(`TP-TotPop`, na.rm=TRUE))
+dataTbl = select(dataTbl,-(STATE:YEAR))
+```
+
+
+##Summarize on state
+```{r, warning=FALSE}
+#Get a list of variables containing a dash
+stateTbl = group_by(dataTbl, stateName) %>%
+  summarise_each(funs(mean(., na.rm = TRUE)))
+  #summarize(totPop = sum(param, na.rm=TRUE))
 ```
 
 ##Join to state map
 ```{r}
 states <- map_data("state") 
-allData <- left_join(states,useTbl,c("region" = "stateName"))
+allData <- left_join(states,stateTbl,c("region" = "stateName"))
 ```
 
 ##Map by state
 ```{r}
 #https://gist.github.com/cdesante/4252133
 p <- ggplot()
-p <- p + geom_polygon(data=allData, aes(x=long, y=lat, group = group, fill=allData$`TP-TotPop`),colour="white"
+p <- p + geom_polygon(data=allData, aes(x=long, y=lat, group = group, fill=allData$TO.WGWFr),colour="white"
       ) + scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar")
 P1 <- p + theme_bw()  + labs(fill = "legend" 
                             ,title = "Title, 2010", x="", y="")
