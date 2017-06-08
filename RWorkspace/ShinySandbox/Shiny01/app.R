@@ -1,19 +1,49 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+##Load USGS Water Use data and enable visualization by state
+# 1. Create table from URL (for a user specified year...) > useTbl
+# 2. Load fips->stateName crosswalk table (fipsTbl), join with use data
+# 3. Join data with State Map
+# 4. Select attribute and show variable
 
+#Load libraries
 library(shiny)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(maps)
+library(mapdata)
+
+#Load data (remove last column named 'X', which is just an artifact)
+theURL <- 'http://water.usgs.gov/watuse/data/2010/usco2010.txt'
+dataTbl = read.table(theURL, sep='\t',header=TRUE) %>%
+  select(-X) #Removes the "X" column
+
+#Load the Fips remap table
+theURL <- "https://raw.githubusercontent.com/johnpfay/WaterAccounting/ExploreData/RWorkspace/ShinySandbox/stfipstable.csv"
+fipsTbl <- read.csv(theURL) %>%
+  select(one_of(c("FIPS.Code","State.Name")))
+
+#Join state names
+dataTbl <- left_join(dataTbl,fipsTbl,by = c("STATEFIPS" = "FIPS.Code"))
+
+#Drop non-data fields
+dataTbl <- select(dataTbl,-(STATE:YEAR))
+
+#Group records on states and compute sum of values
+stateTbl = group_by(dataTbl,State.Name) %>%
+  select(-contains("PCp")) %>% #Remove per-capita columns
+  summarise_each(funs(mean(., na.rm = TRUE)))
+
+#Remove dataTbl and fipsTbl
+remove(dataTbl,fipsTbl)
+
+#Generate a list of variables (skipping the first item: "State.Name")
+useVars <- colnames(stateTbl)[-1]
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
    
    # Application title
-   titlePanel("Old Faithful Geyser Data"),
+   titlePanel("USGS Water use data"),
    
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
@@ -22,7 +52,10 @@ ui <- fluidPage(
                      "Number of bins:",
                      min = 1,
                      max = 50,
-                     value = 30)
+                     value = 30),
+         selectInput("useParam",
+                     "Select parameter",
+                     useVars)
       ),
       
       # Show a plot of the generated distribution
