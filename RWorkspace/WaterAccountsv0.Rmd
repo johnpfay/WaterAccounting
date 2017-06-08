@@ -81,9 +81,10 @@ allData <- left_join(states,stateTbl,c("region" = "stateName"))
 
 ##Map by state
 ```{r}
+foo = select(allData,TO.WGWFr)
 #https://gist.github.com/cdesante/4252133
 p <- ggplot()
-p <- p + geom_polygon(data=allData, aes(x=long, y=lat, group = group, fill=allData$TO.WGWFr),colour="white"
+p <- p + geom_polygon(data=allData, aes(x=long, y=lat, group = group, fill=foo),colour="white"
       ) + scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar")
 P1 <- p + theme_bw()  + labs(fill = "legend" 
                             ,title = "Title, 2010", x="", y="")
