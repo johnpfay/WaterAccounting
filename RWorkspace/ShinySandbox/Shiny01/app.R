@@ -33,11 +33,15 @@ stateTbl = group_by(dataTbl,State.Name) %>%
   select(-contains("PCp")) %>% #Remove per-capita columns
   summarise_each(funs(mean(., na.rm = TRUE)))
 
-#Remove dataTbl and fipsTbl
-remove(dataTbl,fipsTbl)
+#Join to state map
+states <- map_data("state") 
+allData <- left_join(states,stateTbl,c("region" = "State.Name"))
 
 #Generate a list of variables (skipping the first item: "State.Name")
 useVars <- colnames(stateTbl)[-1]
+
+#Clean up: Remove dataTbl and fipsTbl
+remove(dataTbl,fipsTbl,stateTbl)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -48,11 +52,6 @@ ui <- fluidPage(
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
       sidebarPanel(
-         sliderInput("bins",
-                     "Number of bins:",
-                     min = 1,
-                     max = 50,
-                     value = 30),
          selectInput("useParam",
                      "Select parameter",
                      useVars)
@@ -69,12 +68,14 @@ ui <- fluidPage(
 server <- function(input, output) {
    
    output$distPlot <- renderPlot({
-      # generate bins based on input$bins from ui.R
-      x    <- faithful[, 2] 
-      bins <- seq(min(x), max(x), length.out = input$bins + 1)
-      
-      # draw the histogram with the specified number of bins
-      hist(x, breaks = bins, col = 'darkgray', border = 'white')
+     # Generate map
+     p <- ggplot()
+     p <- p + geom_polygon(data=allData, aes(x=long, y=lat, group = group, fill=input$TP.TotPop),colour="white"
+     ) + scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar")
+     P1 <- p + theme_bw()  + labs(fill = "legend" 
+                                  ,title = "Title, 2010", x="", y="")
+     P1 + scale_y_continuous(breaks=c()) + scale_x_continuous(breaks=c()) + theme(panel.border = element_blank())
+
    })
 }
 
