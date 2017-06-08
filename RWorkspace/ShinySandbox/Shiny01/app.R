@@ -12,36 +12,39 @@ library(ggplot2)
 library(maps)
 library(mapdata)
 
-#Load data (remove last column named 'X', which is just an artifact)
-theURL <- 'http://water.usgs.gov/watuse/data/2010/usco2010.txt'
-dataTbl = read.table(theURL, sep='\t',header=TRUE) %>%
-  select(-X) #Removes the "X" column
+# #Load data (remove last column named 'X', which is just an artifact)
+# theURL <- 'http://water.usgs.gov/watuse/data/2010/usco2010.txt'
+# dataTbl = read.table(theURL, sep='\t',header=TRUE) %>%
+#   select(-X) #Removes the "X" column
+# 
+# #Load the Fips remap table
+# theURL <- "https://raw.githubusercontent.com/johnpfay/WaterAccounting/ExploreData/RWorkspace/ShinySandbox/stfipstable.csv"
+# fipsTbl <- read.csv(theURL) %>%
+#   select(one_of(c("FIPS.Code","State.Name")))
+# 
+# #Join state names
+# dataTbl <- left_join(dataTbl,fipsTbl,by = c("STATEFIPS" = "FIPS.Code"))
+# 
+# #Drop non-data fields
+# dataTbl <- select(dataTbl,-(STATE:YEAR))
+# 
+# #Group records on states and compute sum of values
+# stateTbl = group_by(dataTbl,State.Name) %>%
+#   select(-contains("PCp")) %>% #Remove per-capita columns
+#   summarise_each(funs(mean(., na.rm = TRUE)))
 
-#Load the Fips remap table
-theURL <- "https://raw.githubusercontent.com/johnpfay/WaterAccounting/ExploreData/RWorkspace/ShinySandbox/stfipstable.csv"
-fipsTbl <- read.csv(theURL) %>%
-  select(one_of(c("FIPS.Code","State.Name")))
-
-#Join state names
-dataTbl <- left_join(dataTbl,fipsTbl,by = c("STATEFIPS" = "FIPS.Code"))
-
-#Drop non-data fields
-dataTbl <- select(dataTbl,-(STATE:YEAR))
-
-#Group records on states and compute sum of values
-stateTbl = group_by(dataTbl,State.Name) %>%
-  select(-contains("PCp")) %>% #Remove per-capita columns
-  summarise_each(funs(mean(., na.rm = TRUE)))
+theURL <- "https://raw.githubusercontent.com/johnpfay/WaterAccounting/ExploreData/RWorkspace/ShinySandbox/StateData.csv"
+stateTbl = read.csv(theURL,header=TRUE)
 
 #Join to state map
 states <- map_data("state") 
 allData <- left_join(states,stateTbl,c("region" = "State.Name"))
 
 #Generate a list of variables (skipping the first item: "State.Name")
-useVars <- colnames(stateTbl)[-1]
+useVars <- colnames(stateTbl)[-1:-2]
 
-#Clean up: Remove dataTbl and fipsTbl
-remove(dataTbl,fipsTbl,stateTbl)
+##Clean up: Remove dataTbl and fipsTbl
+#remove(dataTbl,fipsTbl,stateTbl)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -59,7 +62,7 @@ ui <- fluidPage(
       
       # Show a plot of the generated distribution
       mainPanel(
-         plotOutput("distPlot")
+         plotOutput("usMap")
       )
    )
 )
@@ -67,10 +70,12 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
    
-   output$distPlot <- renderPlot({
+   output$usMap <- renderPlot({
+     #Make series of user variable
+     userSeries = select(allData,one_of(input$useParam))
      # Generate map
      p <- ggplot()
-     p <- p + geom_polygon(data=allData, aes(x=long, y=lat, group = group, fill=input$TP.TotPop),colour="white"
+     p <- p + geom_polygon(data=allData, aes(x=long, y=lat, group=group, fill=userSeries),colour="white"
      ) + scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar")
      P1 <- p + theme_bw()  + labs(fill = "legend" 
                                   ,title = "Title, 2010", x="", y="")
