@@ -1,0 +1,71 @@
+Column Tag 	Data Element
+STATE 	State postal abbreviation
+STATEFIPS 	State FIPS code
+COUNTYFIPS 	County FIPS code
+FIPS 	Combined State-county FIPS codes
+TP-TotPop 	Total population of county, in thousands
+PS-TOPop 	Public supply, total population served, in thousands
+PS-WGWFr 	Public supply, ground-water withdrawals, fresh, in Mgal/d
+PS-WSWFr 	Public supply, surface-water withdrawals, fresh, in Mgal/d
+PS-WFrTo 	Public supply, total withdrawals, fresh, in Mgal/d
+DO-SSPop 	Domestic, self-supplied population, in thousands
+DO-WGWFr 	Domestic, ground-water self-supplied withdrawals, fresh, in Mgal/d
+DO-WSWFr 	Domestic, surface-water self-supplied withdrawals, fresh, in Mgal/d
+DO-WFrTo 	Domestic, total self-supplied withdrawals, fresh, in Mgal/d
+IN-WGWFr 	Industrial, ground-water self-supplied withdrawals, fresh, in Mgal/d
+IN-WGWSa 	Industrial, ground-water self-supplied withdrawals, saline, in Mgal/d
+IN-WGWTo 	Industrial, ground-water self-supplied withdrawals, total, in Mgal/d
+IN-WSWFr 	Industrial, surface-water self-supplied withdrawals, fresh, in Mgal/d
+IN-WSWSa 	Industrial, surface-water self-supplied withdrawals, saline, in Mgal/d
+IN-WSWTo 	Industrial, surface-water self-supplied withdrawals, total, in Mgal/d
+IN-WFrTo 	Industrial, total self-supplied withdrawals, fresh, in Mgal/d
+IN-WSaTo 	Industrial, total self-supplied withdrawals, saline, in Mgal/d
+IN-Wtotl 	Industrial, total self-supplied withdrawals, total, in Mgal/d
+IT-IrSpr 	Irrigation, acres irrigated, sprinkler, in thousands
+IT-IrMic 	Irrigation, acres irrigated, microirrigation, in thousands
+IT-IrSur 	Irrigation, acres irrigated, surface, in thousands
+IT-IrTot 	Irrigation, acres irrigated, total, in thousands
+IT-WGWFr 	Irrigation, ground-water withdrawals, fresh, in Mgal/d
+IT-WSWFr 	Irrigation, surface-water withdrawals, fresh, in Mgal/d
+IT-WFrTo 	Irrigation, total withdrawals, fresh, in Mgal/d
+LA-WGWFr 	Aquaculture, ground-water withdrawals, fresh, in Mgal/d
+LA-WSWFr 	Aquaculture, surface-water withdrawals, fresh, in Mgal/d
+LA-WFrTo 	Aquaculture, total withdrawals, fresh, in Mgal/d
+LS-WGWFr 	Livestock, ground-water withdrawals, fresh, in Mgal/d
+LS-WSWFr 	Livestock, surface-water withdrawals, fresh, in Mgal/d
+LS-WFrTo 	Livestock, total withdrawals, fresh, in Mgal/d
+MI-WGWFr 	Mining, ground-water withdrawals, fresh, in Mgal/d
+MI-WGWSa 	Mining, ground-water withdrawals, saline, in Mgal/d
+MI-WGWTo 	Mining, ground-water withdrawals, total, in Mgal/d
+MI-WSWFr 	Mining, surface-water withdrawals, fresh, in Mgal/d
+MI-WSWSa 	Mining, surface-water withdrawals, saline, in Mgal/d
+MI-WSWTo 	Mining, surface-water withdrawals, total, in Mgal/d
+MI-WFrTo 	Mining, total withdrawals, fresh, in Mgal/d
+MI-WSaTo 	Mining, total withdrawals, saline, in Mgal/d
+MI-Wtotl 	Mining, total withdrawals, total, in Mgal/d
+PT-WGWFr 	Thermoelectric power, ground-water withdrawals, fresh, in Mgal/d
+PT-WSWFr 	Thermoelectric power, surface-water withdrawals, fresh, in Mgal/d
+PT-WSWSa 	Thermoelectric power, surface-water withdrawals, saline, in Mgal/d
+PT-WSWTo 	Thermoelectric power, surface-water withdrawals, total, in Mgal/d
+PT-WFrTo 	Thermoelectric power, total withdrawals, fresh, in Mgal/d
+PT-WSaTo 	Thermoelectric power, total withdrawals, saline, in Mgal/d
+PT-Wtotl 	Thermoelectric power, total withdrawals, total, in Mgal/d
+PO-WSWFr 	Thermoelectric power once-through, surface-water withdrawals, fresh, in Mgal/d
+PO-WSWSa 	Thermoelectric power once-through, surface-water withdrawals, saline, in Mgal/d
+PO-WSWTo 	Thermoelectric power once-through, surface-water withdrawals, total, in Mgal/d
+PE-WGWFr 	Thermoelectric power closed-loop, ground-water withdrawals, fresh, in Mgal/d
+PE-WSWFr 	Thermoelectric power closed-loop, surface-water withdrawals, fresh, in Mgal/d
+PE-WSWSa 	Thermoelectric power closed-loop, surface-water withdrawals, saline, in Mgal/d
+PE-WSWTo 	Thermoelectric power closed-loop, surface-water withdrawals, total, in Mgal/d
+PE-WFrTo 	Thermoelectric power closed-loop, total withdrawals, fresh, in Mgal/d
+PE-WSaTo 	Thermoelectric power closed-loop, total withdrawals, saline, in Mgal/d
+PE-Wtotl 	Thermoelectric power closed-loop, total withdrawals, total, in Mgal/d
+TO-WGWFr 	Total, ground-water withdrawals, fresh, in Mgal/d
+TO-WGWSa 	Total, ground-water withdrawals, saline, in Mgal/d
+TO-WGWTo 	Total, ground-water withdrawals, total, in Mgal/d
+TO-WSWFr 	Total, surface-water withdrawals, fresh, in Mgal/d
+TO-WSWSa 	Total, surface-water withdrawals, saline, in Mgal/d
+TO-WSWTo 	Total, surface-water withdrawals, total, in Mgal/d
+TO-WFrTo 	Total withdrawals, fresh, in Mgal/d
+TO-WSaTo 	Total withdrawals, saline, in Mgal/d
+TO-WTotl 	Total withdrawals, total, in Mgal/d
