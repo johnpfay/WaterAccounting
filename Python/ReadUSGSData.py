@@ -25,8 +25,11 @@ for year in (2000,2005,2010):
     #Create data frames from on-line tables
     df = pd.read_table(theBaseURL.format(year))
     #Insert year column if not there already
+    cols = df.columns
     if not "YEAR" in df.columns:
         df.insert(4,"YEAR",year)
+    #Create a list of column names
+    cols.to_series().to_csv("cols{}.csv".format(year),index=False)
     #Append to list of dataframes
     dfs.append(df)
 #Merge into a single table
