@@ -9,4 +9,13 @@ RWorkspace/WaterAccounts.nb.html
 RWorkspace/ShinySandbox/.RProj.user/*
 
 NoteBooks/.ipynb_checkpoints/*
+NoteBooks/Data/*
+
 Python/Data/UseData.csv
+Python/*.csv
+
+ArcGIS/Data/*
+ArcGIS/Scratch/*
+
+Data/hydro5/*
+Data/hydro5.tar.gz
